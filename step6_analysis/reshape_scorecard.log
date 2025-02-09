@@ -1,0 +1,689 @@
+
+. 
+. 
+. 
+. ********************************************************************************
+. **********    keep scorecard variables     ************
+. ********************************************************************************
+. 
+. 
+. 
+. **** Grab the scorecard elements that were extracted using codes
+. import excel "$onedrive\extractions_merged_anonymized_deduplicated.xlsx", firstrow clear
+(241 vars, 6,849 obs)
+
+. 
+. *keep and rename important vars
+. keep doc_id* title_clean sc*
+
+. drop sc*desc sc_present sc_outcomes_amount sc_total_words
+
+. rename sc_*_rating sc_rating*
+
+. rename sc_*_topic sc_topic*
+
+. 
+. *reshape long and keep scorecard elements with topics
+. reshape long sc_topic sc_rating, i(doc_id_old doc_id_new title_clean) j(entry)
+(note: j = 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20)
+(note: sc_topic19 not found)
+(note: sc_topic20 not found)
+
+Data                               wide   ->   long
+-----------------------------------------------------------------------------
+Number of obs.                     6849   ->  136980
+Number of variables                  53   ->      18
+j variable (20 values)                    ->   entry
+xij variables:
+     sc_topic1 sc_topic2 ... sc_topic20   ->   sc_topic
+  sc_rating1 sc_rating2 ... sc_rating20   ->   sc_rating
+-----------------------------------------------------------------------------
+
+. drop if sc_topic==""
+(103,933 observations deleted)
+
+. 
+. *combine all of the relations elements...we can do a more detailed analysis later
+. replace sc_topic="relations" if regexm(sc_topic, "^relations")
+(4,946 real changes made)
+
+. 
+. *convert letters to numbers
+. gen sc_score = 4.3 if sc_rating=="a+"
+(32,972 missing values generated)
+
+. replace sc_score = 4 if sc_rating=="a"
+(3,954 real changes made)
+
+. replace sc_score = 3.7 if sc_rating=="a-"
+(7,505 real changes made)
+
+. replace sc_score = 3.3 if sc_rating=="b+"
+(8,036 real changes made)
+
+. replace sc_score = 3 if sc_rating=="b"
+(6,469 real changes made)
+
+. replace sc_score = 2.7 if sc_rating=="b-"
+(2,279 real changes made)
+
+. replace sc_score = 2.3 if sc_rating=="c+"
+(277 real changes made)
+
+. replace sc_score = 2 if sc_rating=="c"
+(454 real changes made)
+
+. replace sc_score = 1.7 if sc_rating=="c-"
+(32 real changes made)
+
+. 
+. *some documents have the same topic multiple times
+. *when collapsing, we average all the topic's ratings
+. duplicates report doc_id_old doc_id_new sc_topic
+
+Duplicates in terms of doc_id_old doc_id_new sc_topic
+
+--------------------------------------
+   copies | observations       surplus
+----------+---------------------------
+        1 |        23903             0
+        2 |         6570          3285
+        3 |         1689          1126
+        4 |          452           339
+        5 |          155           124
+        6 |           54            45
+        7 |          224           192
+--------------------------------------
+
+. collapse (mean) sc_score, by(doc_id_old doc_id_new title_clean sc_topic sc_type)
+
+. 
+. *reshape back to wide format
+. reshape wide sc_score, i(doc_id_old doc_id_new title_clean sc_type) j(sc_topic) string
+(note: j = analysis branding capital compliance culture deals exit expansion finance growth_both growth_ebitda 
+> growth_revenue innovate leader manage none operations relations staffing strategy)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                    27936   ->    5695
+Number of variables                   6   ->      24
+j variable (20 values)         sc_topic   ->   (dropped)
+xij variables:
+                               sc_score   ->   sc_scoreanalysis sc_scorebranding ... sc_scorestrategy
+-----------------------------------------------------------------------------
+
+. rename sc_score* sc_*
+
+. tempfile reshaped
+
+. save `reshaped'
+file C:\Users\ydecress\AppData\Local\Temp\ST_59b0_000001.tmp saved
+
+. 
+. **** Create an average score
+. import excel "$onedrive\extractions_merged_anonymized_deduplicated.xlsx", firstrow clear
+(241 vars, 6,849 obs)
+
+. 
+. *keep and rename important vars
+. keep doc_id* sc*
+
+. drop sc*desc sc_*_topic sc_present sc_outcomes_amount sc_total_words sc_score* sc_type
+
+. rename sc_*_rating sc_rating*
+
+. 
+. *reshape long and keep scorecard elements with topics
+. reshape long sc_rating, i(doc_id_old doc_id_new) j(entry)
+(note: j = 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20)
+
+Data                               wide   ->   long
+-----------------------------------------------------------------------------
+Number of obs.                     6849   ->  136980
+Number of variables                  31   ->      13
+j variable (20 values)                    ->   entry
+xij variables:
+  sc_rating1 sc_rating2 ... sc_rating20   ->   sc_rating
+-----------------------------------------------------------------------------
+
+. 
+. *convert letters to numbers
+. gen sc_score = 4.3 if sc_rating=="a+"
+(136,883 missing values generated)
+
+. replace sc_score = 4 if sc_rating=="a"
+(5,400 real changes made)
+
+. replace sc_score = 3.7 if sc_rating=="a-"
+(9,398 real changes made)
+
+. replace sc_score = 3.3 if sc_rating=="b+"
+(9,904 real changes made)
+
+. replace sc_score = 3 if sc_rating=="b"
+(7,954 real changes made)
+
+. replace sc_score = 2.7 if sc_rating=="b-"
+(2,722 real changes made)
+
+. replace sc_score = 2.3 if sc_rating=="c+"
+(334 real changes made)
+
+. replace sc_score = 2 if sc_rating=="c"
+(575 real changes made)
+
+. replace sc_score = 1.7 if sc_rating=="c-"
+(41 real changes made)
+
+. 
+. *get mean
+. collapse (mean) sc_score, by(doc_id_old doc_id_new)
+
+. drop if sc_score==.
+(1,652 observations deleted)
+
+. rename sc_score sc_mean
+
+. 
+. tempfile sc_mean
+
+. save `sc_mean'
+file C:\Users\ydecress\AppData\Local\Temp\ST_59b0_000002.tmp saved
+
+. 
+. 
+. **** Scorecard elements extracted by RAs from past data
+. import excel "$onedrive\extractions_merged_anonymized_deduplicated.xlsx", firstrow clear
+(241 vars, 6,849 obs)
+
+. 
+. *keep and rename important vars
+. keep doc_id* title_clean sc*
+
+. drop sc*desc sc*topic sc*rating sc_present sc_outcomes_amount sc_total_words sc_score* sc_type
+
+. 
+. *reshape long
+. reshape long sc_, i(doc_id_old doc_id_new title_clean) j(topic) string
+(note: j = deals growth_both growth_ebitda growth_revenue innovate other relations staffing strategy)
+
+Data                               wide   ->   long
+-----------------------------------------------------------------------------
+Number of obs.                     6849   ->   61641
+Number of variables                  12   ->       5
+j variable (9 values)                     ->   topic
+xij variables:
+sc_deals sc_growth_both ... sc_strategy   ->   sc_
+-----------------------------------------------------------------------------
+
+. 
+. *only keep those with ratings from the past data
+. rename sc_ sc_rating
+
+. drop if sc_rating==""
+(47,953 observations deleted)
+
+. 
+. *convert grades to scores
+. gen sc_score = 4.3 if sc_rating=="a+"
+(13,637 missing values generated)
+
+. replace sc_score = 4 if sc_rating=="a"
+(2,508 real changes made)
+
+. replace sc_score = 3.7 if sc_rating=="a-"
+(3,280 real changes made)
+
+. replace sc_score = 3.3 if sc_rating=="b+"
+(3,096 real changes made)
+
+. replace sc_score = 3 if sc_rating=="b"
+(2,823 real changes made)
+
+. replace sc_score = 2.7 if sc_rating=="b-"
+(1,262 real changes made)
+
+. replace sc_score = 2.3 if sc_rating=="c+"
+(268 real changes made)
+
+. replace sc_score = 2 if sc_rating=="c"
+(380 real changes made)
+
+. replace sc_score = 1.7 if sc_rating=="c-"
+(20 real changes made)
+
+. drop sc_rating
+
+. 
+. *reshape wide
+. reshape wide sc_score, i(doc_id_old doc_id_new title_clean) j(topic) string
+(note: j = deals growth_both growth_ebitda growth_revenue innovate other relations staffing strategy)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                    13688   ->    2662
+Number of variables                   5   ->      12
+j variable (9 values)             topic   ->   (dropped)
+xij variables:
+                               sc_score   ->   sc_scoredeals sc_scoregrowth_both ... sc_scorestrategy
+-----------------------------------------------------------------------------
+
+. rename sc_score* old_sc_*
+
+. tempfile reshaped_old
+
+. save `reshaped_old'
+file C:\Users\ydecress\AppData\Local\Temp\ST_59b0_000003.tmp saved
+
+. 
+. 
+. **** Calcualte mean from Scorecard elements extracted by RAs from past data
+. import excel "$onedrive\extractions_merged_anonymized_deduplicated.xlsx", firstrow clear
+(241 vars, 6,849 obs)
+
+. 
+. *keep and rename important vars
+. keep doc_id* sc*
+
+. drop sc*desc sc*topic sc*rating sc_present sc_outcomes_amount sc_total_words sc_score* sc_type
+
+. 
+. *reshape long
+. reshape long sc_, i(doc_id_old doc_id_new) j(topic) string
+(note: j = deals growth_both growth_ebitda growth_revenue innovate other relations staffing strategy)
+
+Data                               wide   ->   long
+-----------------------------------------------------------------------------
+Number of obs.                     6849   ->   61641
+Number of variables                  11   ->       4
+j variable (9 values)                     ->   topic
+xij variables:
+sc_deals sc_growth_both ... sc_strategy   ->   sc_
+-----------------------------------------------------------------------------
+
+. 
+. *only keep those with ratings from the past data
+. rename sc_ sc_rating
+
+. drop if sc_rating==""
+(47,953 observations deleted)
+
+. 
+. *convert grades to scores
+. gen sc_score = 4.3 if sc_rating=="a+"
+(13,637 missing values generated)
+
+. replace sc_score = 4 if sc_rating=="a"
+(2,508 real changes made)
+
+. replace sc_score = 3.7 if sc_rating=="a-"
+(3,280 real changes made)
+
+. replace sc_score = 3.3 if sc_rating=="b+"
+(3,096 real changes made)
+
+. replace sc_score = 3 if sc_rating=="b"
+(2,823 real changes made)
+
+. replace sc_score = 2.7 if sc_rating=="b-"
+(1,262 real changes made)
+
+. replace sc_score = 2.3 if sc_rating=="c+"
+(268 real changes made)
+
+. replace sc_score = 2 if sc_rating=="c"
+(380 real changes made)
+
+. replace sc_score = 1.7 if sc_rating=="c-"
+(20 real changes made)
+
+. drop sc_rating
+
+. 
+. *get mean
+. collapse (mean) sc_score, by(doc_id_old doc_id_new)
+
+. rename sc_score old_sc_mean
+
+. 
+. tempfile sc_mean_old
+
+. save `sc_mean_old'
+file C:\Users\ydecress\AppData\Local\Temp\ST_59b0_000004.tmp saved
+
+. 
+. 
+. 
+. 
+. **** Merge the two datasets
+. 
+. use `reshaped_old', clear
+
+. merge 1:1 doc_id_old doc_id_new title_clean using `reshaped', nogen
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                         4,477
+        from master                       722  
+        from using                      3,755  
+
+    matched                             1,940  
+    -----------------------------------------
+
+. merge 1:1 doc_id_old doc_id_new using `sc_mean', nogen
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                         1,234
+        from master                     1,227  
+        from using                          7  
+
+    matched                             5,190  
+    -----------------------------------------
+
+. rename sc_* new_sc_*
+
+. merge 1:1 doc_id_old doc_id_new using `sc_mean_old', nogen
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                         3,762
+        from master                     3,762  
+        from using                          0  
+
+    matched                             2,662  
+    -----------------------------------------
+
+. summarize
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+  doc_id_old |      6,424     12183.5    27496.21         -1     105731
+  doc_id_new |      6,424     3874.57    2521.861         -1       8159
+ title_clean |          0
+old_sc_deals |      1,121     3.30446    .5076712        1.7        4.3
+old_sc_gro~h |      1,074    3.393017    .4616895          2        4.3
+-------------+---------------------------------------------------------
+old_sc_gro~a |      1,427      3.3822    .4877805        1.7        4.3
+old_sc_gro~e |      1,739    3.405348    .4921246        1.7        4.3
+old_sc_inn~e |        685    3.469927    .4643434          2        4.3
+old_sc_other |      1,691    3.474216    .4879348        1.7        4.3
+old_sc_rel~s |      1,846    3.320693    .4943965        1.7        4.3
+-------------+---------------------------------------------------------
+old_sc_sta~g |      2,350    3.191404    .5031304        1.7        4.3
+old_sc_str~y |      1,755    3.369003    .5094734        1.7        4.3
+ new_sc_type |          0
+new_sc_ana~s |        386    3.421373    .4477249        1.7        4.3
+new_sc_bra~g |        424    3.396694    .4054218          2        4.3
+-------------+---------------------------------------------------------
+new_sc_cap~l |        298    3.408221    .4433472          2          4
+new_sc_com~e |        483    3.466266    .4056437          2        4.3
+new_sc_cul~e |      1,740    3.402931    .4397434        1.7        4.3
+new_sc_deals |      1,702    3.331238    .4197432        1.7        4.3
+ new_sc_exit |      1,252    3.381989    .4447853        1.7        4.3
+-------------+---------------------------------------------------------
+new_sc_exp~n |        180    3.321296    .3812613          2          4
+new_sc_fin~e |        736    3.447283    .4173636        1.8        4.3
+new_sc_gro~h |      2,016    3.377054    .4110915          2        4.3
+new_sc_gro~a |        956    3.374006     .444476        1.7        4.3
+new_sc_gro~e |      1,683    3.398945    .4272327        1.7        4.3
+-------------+---------------------------------------------------------
+new_sc_inn~e |        526    3.406464    .4255373          2        4.3
+new_sc_lea~r |      1,277    3.317724    .4145127       1.85        4.3
+new_sc_man~e |        661    3.413036    .4131562          2        4.3
+ new_sc_none |          0
+new_sc_ope~s |      2,345    3.415851    .4177197        1.7        4.3
+-------------+---------------------------------------------------------
+new_sc_rel~s |      3,253    3.311085    .4268355        1.7        4.3
+new_sc_sta~g |      3,258    3.210095    .4371107        1.7        4.3
+new_sc_str~y |      1,604    3.352641    .4407272          2        4.3
+ new_sc_mean |      5,197    3.373613    .3165969        1.7       4.15
+ old_sc_mean |      2,662    3.358065    .3732647        1.8       4.18
+
+. 
+. *merge in the old extraction when the new extraction not available
+. rename old_sc_* sc_*
+
+. drop sc_other new_sc_none
+
+. 
+. unab sc_vars: sc_*
+
+. foreach var in `sc_vars'  {
+  2.         replace new_`var' = `var' if missing(new_`var')
+  3. }
+(615 real changes made)
+(792 real changes made)
+(943 real changes made)
+(1,042 real changes made)
+(446 real changes made)
+(921 real changes made)
+(1,010 real changes made)
+(1,158 real changes made)
+(749 real changes made)
+
+. drop sc_*
+
+. rename new_* *
+
+. 
+. *create the broad revenue and cost measures
+. egen sc_broad_revenue = rowmean(sc_branding sc_expansion sc_growth_revenue sc_innovate)
+(3,130 missing values generated)
+
+. egen sc_broad_cost = rowmean(sc_growth_ebitda sc_operations)
+(2,990 missing values generated)
+
+. 
+. *create dummy variables for if the sc element type was included or not
+. unab sc_vars: sc_*
+
+. foreach var in sc_analysis sc_branding sc_broad_cost sc_broad_revenue sc_capital sc_compliance sc_culture sc_
+> deals sc_exit sc_expansion sc_finance sc_growth_both sc_growth_ebitda sc_growth_revenue sc_innovate sc_leader
+>  sc_manage sc_operations sc_relations sc_staffing sc_strategy  {
+  2.         generate has_`var' = `var'!=.
+  3. }
+
+. 
+. summarize
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+  doc_id_old |      6,424     12183.5    27496.21         -1     105731
+  doc_id_new |      6,424     3874.57    2521.861         -1       8159
+ title_clean |          0
+     sc_type |          0
+ sc_analysis |        386    3.421373    .4477249        1.7        4.3
+-------------+---------------------------------------------------------
+ sc_branding |        424    3.396694    .4054218          2        4.3
+  sc_capital |        298    3.408221    .4433472          2          4
+sc_complia~e |        483    3.466266    .4056437          2        4.3
+  sc_culture |      1,740    3.402931    .4397434        1.7        4.3
+    sc_deals |      2,317    3.327866    .4478172        1.7        4.3
+-------------+---------------------------------------------------------
+     sc_exit |      1,252    3.381989    .4447853        1.7        4.3
+sc_expansion |        180    3.321296    .3812613          2          4
+  sc_finance |        736    3.447283    .4173636        1.8        4.3
+sc_growth_~h |      2,808    3.383526      .42837          2        4.3
+sc_growth_~a |      1,899    3.380016    .4684944        1.7        4.3
+-------------+---------------------------------------------------------
+sc_growth_~e |      2,725    3.395642    .4591426        1.7        4.3
+ sc_innovate |        972    3.431276     .446106          2        4.3
+   sc_leader |      1,277    3.317724    .4145127       1.85        4.3
+   sc_manage |        661    3.413036    .4131562          2        4.3
+sc_operati~s |      2,345    3.415851    .4177197        1.7        4.3
+-------------+---------------------------------------------------------
+sc_relations |      4,174    3.320091     .442135        1.7        4.3
+ sc_staffing |      4,268    3.202224    .4620676        1.7        4.3
+ sc_strategy |      2,762    3.361165    .4726222        1.7        4.3
+     sc_mean |      5,946    3.369377    .3287478        1.7       4.18
+sc_broad_r~e |      3,294    3.399107    .4301196        1.7        4.3
+-------------+---------------------------------------------------------
+sc_broad_c~t |      3,434    3.403322    .4260169        1.7        4.3
+has_sc_ana~s |      6,424    .0600872    .2376668          0          1
+has_sc_bra~g |      6,424    .0660025    .2483058          0          1
+has_sc_bro~t |      6,424    .5345579    .4988431          0          1
+has_sc_bro~e |      6,424    .5127646    .4998759          0          1
+-------------+---------------------------------------------------------
+has_sc_cap~l |      6,424    .0463885    .2103415          0          1
+has_sc_com~e |      6,424    .0751868     .263713          0          1
+has_sc_cul~e |      6,424    .2708593    .4444382          0          1
+has_sc_deals |      6,424    .3606787    .4802348          0          1
+ has_sc_exit |      6,424    .1948941      .39615          0          1
+-------------+---------------------------------------------------------
+has_sc_exp~n |      6,424    .0280199    .1650426          0          1
+has_sc_fin~e |      6,424    .1145704    .3185275          0          1
+has_sc_gro~h |      6,424    .4371108    .4960678          0          1
+has_sc_gro~a |      6,424    .2956102    .4563521          0          1
+has_sc_gro~e |      6,424    .4241905     .494258          0          1
+-------------+---------------------------------------------------------
+has_sc_inn~e |      6,424    .1513076    .3583763          0          1
+has_sc_lea~r |      6,424    .1987858    .3991175          0          1
+has_sc_man~e |      6,424    .1028954    .3038459          0          1
+has_sc_ope~s |      6,424    .3650374    .4814781          0          1
+has_sc_rel~s |      6,424    .6497509     .477085          0          1
+-------------+---------------------------------------------------------
+has_sc_sta~g |      6,424    .6643836    .4722423          0          1
+has_sc_str~y |      6,424    .4299502    .4951072          0          1
+
+. 
+. *check counts
+. count if !missing(sc_growth_ebitda) & !missing(sc_growth_revenue)
+  1,479
+
+. 
+. 
+. **** save
+. save "$outfolder\data\scorecard.dta", replace
+(note: file C:\Users\ydecress\Desktop\Kaplan\TextExtractionOutput\data\scorecard.dta not found)
+file C:\Users\ydecress\Desktop\Kaplan\TextExtractionOutput\data\scorecard.dta saved
+
+. 
+. 
+. 
+. 
+. 
+. 
+. **** check counts among ceo/cfo/coo
+. use "$outfolder\data\scorecard.dta", replace
+
+. //keep if title_clean=="ceo" | title_clean=="cfo" | title_clean=="coo"
+. keep if title_clean=="ceo"
+(4,957 observations deleted)
+
+. 
+. summarize
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+  doc_id_old |      1,467    16325.46    30941.28         -1     105673
+  doc_id_new |      1,467    3808.925    2677.561         -1       8159
+ title_clean |          0
+     sc_type |          0
+ sc_analysis |         31    3.454839    .3784519        2.7          4
+-------------+---------------------------------------------------------
+ sc_branding |        135        3.41    .4085285          2        4.3
+  sc_capital |         35    3.325714    .4414834        2.3          4
+sc_complia~e |         80    3.371875    .4749313          2          4
+  sc_culture |        314    3.404777    .4059377          2          4
+    sc_deals |        682    3.328959     .457643        1.7          4
+-------------+---------------------------------------------------------
+     sc_exit |        586    3.394056    .4418388        1.7        4.3
+sc_expansion |         68    3.361765    .3840201        2.7          4
+  sc_finance |         47    3.310638    .3995835          2          4
+sc_growth_~h |        888    3.383634    .4168856          2        4.3
+sc_growth_~a |        690    3.419058    .4457412        1.7        4.3
+-------------+---------------------------------------------------------
+sc_growth_~e |        904     3.45354    .4292089          2        4.3
+ sc_innovate |        408    3.449387    .4361078          2        4.3
+   sc_leader |        285    3.294269    .4233366       1.85          4
+   sc_manage |        102    3.316176    .4505311          2          4
+sc_operati~s |        688     3.42374    .4169657          2        4.3
+-------------+---------------------------------------------------------
+sc_relations |      1,023    3.302379    .4482029        1.7        4.3
+ sc_staffing |      1,129    3.218379    .4724091        1.7        4.3
+ sc_strategy |        871    3.388949    .4620445          2        4.3
+     sc_mean |      1,404    3.365083    .3156259   2.128572       4.15
+sc_broad_r~e |      1,067    3.447149    .3907085          2        4.3
+-------------+---------------------------------------------------------
+sc_broad_c~t |      1,076    3.419958    .4130352          2        4.3
+has_sc_ana~s |      1,467    .0211316    .1438719          0          1
+has_sc_bra~g |      1,467    .0920245    .2891592          0          1
+has_sc_bro~t |      1,467    .7334697    .4422955          0          1
+has_sc_bro~e |      1,467    .7273347     .445482          0          1
+-------------+---------------------------------------------------------
+has_sc_cap~l |      1,467    .0238582    .1526594          0          1
+has_sc_com~e |      1,467    .0545331     .227144          0          1
+has_sc_cul~e |      1,467    .2140423    .4102961          0          1
+has_sc_deals |      1,467    .4648943    .4989362          0          1
+ has_sc_exit |      1,467    .3994547    .4899533          0          1
+-------------+---------------------------------------------------------
+has_sc_exp~n |      1,467    .0463531    .2103203          0          1
+has_sc_fin~e |      1,467    .0320382    .1761615          0          1
+has_sc_gro~h |      1,467     .605317    .4889492          0          1
+has_sc_gro~a |      1,467    .4703476    .4992902          0          1
+has_sc_gro~e |      1,467    .6162236    .4864703          0          1
+-------------+---------------------------------------------------------
+has_sc_inn~e |      1,467    .2781186    .4482249          0          1
+has_sc_lea~r |      1,467     .194274    .3957757          0          1
+has_sc_man~e |      1,467    .0695297    .2544394          0          1
+has_sc_ope~s |      1,467    .4689843    .4992073          0          1
+has_sc_rel~s |      1,467    .6973415    .4595653          0          1
+-------------+---------------------------------------------------------
+has_sc_sta~g |      1,467    .7695978    .4212339          0          1
+has_sc_str~y |      1,467    .5937287    .4913038          0          1
+
+. 
+. count if !missing(sc_growth_ebitda) & !missing(sc_growth_revenue)
+  594
+
+. count if !missing(sc_growth_ebitda) & !missing(sc_growth_revenue) & !missing(sc_staffing)
+  558
+
+. count if !missing(sc_growth_ebitda) & !missing(sc_growth_revenue) & !missing(sc_strategy)
+  448
+
+. count if !missing(sc_growth_ebitda) & !missing(sc_growth_revenue) & !missing(sc_staffing)  & !missing(sc_stra
+> tegy)
+  431
+
+. count if !missing(sc_growth_ebitda) & !missing(sc_growth_revenue) & !missing(sc_staffing)  & !missing(sc_stra
+> tegy) & !missing(sc_relations)
+  280
+
+. 
+. count if (!missing(sc_growth_both) | (!missing(sc_growth_ebitda) & !missing(sc_growth_revenue)))
+  1,163
+
+. count if (!missing(sc_growth_both) | (!missing(sc_growth_ebitda) & !missing(sc_growth_revenue))) & !missing(s
+> c_staffing)
+  974
+
+. count if (!missing(sc_growth_both) | (!missing(sc_growth_ebitda) & !missing(sc_growth_revenue))) & !missing(s
+> c_strategy)
+  735
+
+. count if (!missing(sc_growth_both) | (!missing(sc_growth_ebitda) & !missing(sc_growth_revenue))) & !missing(s
+> c_staffing)  & !missing(sc_strategy)
+  664
+
+. count if (!missing(sc_growth_both) | (!missing(sc_growth_ebitda) & !missing(sc_growth_revenue))) & !missing(s
+> c_staffing)  & !missing(sc_strategy) & !missing(sc_relations)
+  469
+
+. count if (!missing(sc_growth_both) | (!missing(sc_growth_ebitda) & !missing(sc_growth_revenue))) & !missing(s
+> c_staffing)  & !missing(sc_strategy) & !missing(sc_operations)
+  303
+
+. count if (!missing(sc_growth_both) | (!missing(sc_growth_ebitda) & !missing(sc_growth_revenue))) & !missing(s
+> c_staffing)  & !missing(sc_strategy) & !missing(sc_relations) & !missing(sc_deals)
+  247
+
+. 
+. 
+. log close
+      name:  <unnamed>
+       log:  C:\Users\ydecress\Desktop\Kaplan\TextExtraction\step6_analysis\reshape_scorecard.log
+  log type:  text
+ closed on:  27 Jan 2021, 10:31:58
+---------------------------------------------------------------------------------------------------------------

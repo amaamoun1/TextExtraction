@@ -1,0 +1,201 @@
+Rank,University,Country
+1,Massachusetts Institute of Technology, us
+2,Harvard University, us
+3,Stanford University, us
+4,"University of California, Berkeley", us
+5,Purdue University, us
+6,Cornell University, us
+7,University of Washington, us
+8,Columbia University in the City of New York, us
+9,University of Michigan, us
+10,Penn State University, us
+11,University of Minnesota, us
+12,University of Wisconsin-Madison, us
+13,"University of California, Los Angeles", us
+14,New York University, us
+15,University of Pennsylvania, us
+16,University of Toronto, ca
+17,Yale University, us
+18,The University of Texas at Austin, us
+19,University of Oxford, gb
+20,Princeton University, us
+21,Carnegie Mellon University, us
+22,University of Southern California, us
+23,The University of British Columbia, ca
+24,"University of California, Irvine", us
+25,University of Colorado Boulder, us
+26,University of Illinois at Urbana-Champaign, us
+27,University of Cambridge, gb
+28,Arizona State University, us
+29,University of Chicago, us
+30,Johns Hopkins University, us
+31,"University of California, San Diego", us
+32,Michigan State University, us
+33,The University of Arizona, us
+34,University of Florida, us
+35,"Rutgers, The State University of New Jersey", us
+36,Northwestern University, us
+37,Shanghai Jiao Tong University, cn
+38,Texas A&M University, us
+39,Duke University, us
+40,Fudan University, cn
+41,Boston University, us
+42,"University of California, Davis", us
+43,The University of Utah, us
+44,University of North Carolina at Chapel Hill, us
+45,University of Maryland, us
+46,The University of Edinburgh, gb
+47,Universidad Nacional Autónoma de México, mx
+48,The Ohio State University, us
+49,University of Waterloo, ca
+50,Universidade de São Paulo, br
+51,McGill University, ca
+52,North Carolina State University, us
+53,Georgia Institute of Technology, us
+54,University of Virginia, us
+55,Guangxi University, cn
+56,Eidgenössische Technische Hochschule Zürich, ch
+57,University College London, gb
+58,University of Pittsburgh, us
+59,King Saud University, sa
+60,Simon Fraser University, ca
+61,Washington University in St. Louis, us
+62,Virginia Polytechnic Institute and State University, us
+63,Florida State University, us
+64,Indiana University Bloomington, us
+65,Iowa State University of Science and Technology, us
+66,"University of California, Santa Barbara", us
+67,University of Massachusetts Amherst, us
+68,The University of New South Wales, au
+69,National University of Singapore, sg
+70,Oregon State University, us
+71,University of Alberta, ca
+72,University of Houston, us
+73,George Mason University, us
+74,Tsinghua University, cn
+75,Georgetown University, us
+76,Colorado State University, us
+77,California Institute of Technology, us
+78,Brigham Young University, us
+79,Georgia State University, us
+80,University of Nebraska-Lincoln, us
+81,University of South Florida, us
+82,Brown University, us
+83,University of Georgia, us
+84,The University of Sydney, au
+85,Tufts University, us
+86,University of Tehran, ir
+87,University of Iowa, us
+88,University of Delaware, us
+89,The University of Melbourne, au
+90,University of Oregon, us
+91,George Washington University, us
+92,The University of Tokyo, jp
+93,The University of Manchester, gb
+94,Universitat de Barcelona, es
+95,Peking University, cn
+96,Dartmouth College, us
+97,Washington State University, us
+98,University of Rochester, us
+99,University of Notre Dame, us
+100,University of Calgary, ca
+101,Universitetet i Oslo, no
+102,Ruhr-Universität Bochum, de
+103,Katholieke Universiteit Leuven, be
+104,Vanderbilt University, us
+105,"University of California, Santa Cruz", us
+106,"University at Buffalo, State University of New York", us
+107,Universität Wien, at
+108,Ludwig-Maximilians-Universität München, de
+109,Anadolu Üniversitesi, tr
+110,Norges teknisk-naturvitenskaplige universitet, no
+111,York University, ca
+112,The London School of Economics and Political Science, gb
+113,Politecnico di Milano, it
+114,University of Illinois at Chicago, us
+115,National Research University Higher School of Economics, ru
+116,Moscow State University, ru
+117,University of Leeds, gb
+118,Rice University, us
+119,University of Glasgow, gb
+120,Nanyang Technological University, sg
+121,Zhejiang University, cn
+122,The University of Hong Kong, hk
+123,Temple University, us
+124,The Chinese University of Hong Kong, hk
+125,Syracuse University, us
+126,National Taiwan University, tw
+127,The University of Queensland, au
+128,University of Central Florida, us
+129,Queen's University, ca
+130,Universidad Complutense de Madrid, es
+131,Københavns Universitet, dk
+132,"University of California, San Francisco", us
+133,University of Kentucky, us
+134,The University of Nottingham, gb
+135,Australian National University, au
+136,Emory University, us
+137,Rheinisch-Westfälische Technische Hochschule Aachen, de
+138,University of Southampton, gb
+139,Northeastern University, us
+140,The University of Oklahoma, us
+141,Kyoto University, jp
+142,"The University of Tennessee, Knoxville", us
+143,"University of California, Riverside", us
+144,University of Kansas, us
+145,Freie Universität Berlin, de
+146,Heriot-Watt University, gb
+147,Tecnológico de Monterrey, mx
+148,Louisiana State University, us
+149,The University of Warwick, gb
+150,Rochester Institute of Technology, us
+151,Helsingin yliopisto, fi
+152,San Diego State University, us
+153,University of Connecticut, us
+154,École Polytechnique Fédérale de Lausanne, ch
+155,University of New Mexico, us
+156,Université de Strasbourg, fr
+157,McMaster University, ca
+158,Universitat de València, es
+159,Western University, ca
+160,Monash University, au
+161,Imperial College London, gb
+162,Università degli Studi di Bologna, it
+163,University of Victoria, ca
+164,University of South Carolina, us
+165,Universiteit Gent, be
+166,University of Missouri, us
+167,University of Science and Technology of China, cn
+168,Virginia Commonwealth University, us
+169,University of Miami, us
+170,The University of Adelaide, au
+171,Kent State University, us
+172,University of Cincinnati, us
+173,Kungliga Tekniska högskolan, se
+174,Florida International University, us
+175,Università degli Studi di Milano, it
+176,Université de Montréal, ca
+177,Universidad de Granada, es
+178,Université Laval, ca
+179,Technische Universität München, de
+180,Universitas Gadjah Mada, id
+181,Wuhan University, cn
+182,Technische Universiteit Delft, nl
+183,University of Pretoria, za
+184,Lunds Universitet, se
+185,Universiteit van Amsterdam, nl
+186,Uppsala Universitet, se
+187,Seoul National University, kr
+188,Université de Lorraine, fr
+189,Universidad de Guadalajara, mx
+190,Rijksuniversiteit Groningen, nl
+191,Ryerson University, ca
+192,Aarhus Universitet, dk
+193,Boston College, us
+194,Aalto-yliopisto, fi
+195,Rensselaer Polytechnic Institute, us
+196,Drexel University, us
+197,San José State University, us
+198,University of North Texas, us
+199,Keio University, jp
+200,Fordham University, us

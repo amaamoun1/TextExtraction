@@ -1,0 +1,14 @@
+#ignore all pycache files
+__pycache__/
+
+#ignore the outputLOCAL folder because it contains candidate names
+/outputLOCAL
+/output
+
+#ignore any temp files
+~*
+
+#ignore any pickle or json files
+*.pkl
+*.json
+*.xlsx
