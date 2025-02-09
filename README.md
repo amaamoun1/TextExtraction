@@ -1,6 +1,6 @@
 # TextExtraction
 
-Author: Yann Decressin (permanent email: yanndecressin@gmail.com)  
+Author: Asser Maamoun (permanent email: assermaamoun@gmail.com)  
 Date: 10/01/2020  
 Purpose: Extracts useful information from ghsmart interviews.  
 
